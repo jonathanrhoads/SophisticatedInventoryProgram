@@ -1,14 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Controller.MainMenu"
-            prefHeight="600.0" prefWidth="800.0">
-
+<AnchorPane prefHeight="635.0" prefWidth="1336.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.MainMenu">
+   <children>
+      <Label layoutX="66.0" layoutY="40.0" text="Inventory Management System">
+         <font>
+            <Font name="System Bold" size="41.0" />
+         </font>
+      </Label>
+      <TableView fx:id="partTable" layoutX="73.0" layoutY="187.0" prefHeight="293.0" prefWidth="566.0">
+        <columns>
+          <TableColumn fx:id="partIdCol" prefWidth="106.0" text="Part ID" />
+          <TableColumn fx:id="partNameCol" prefWidth="210.0" text="Part Name" />
+            <TableColumn fx:id="partInventoryLevelCol" prefWidth="114.6666259765625" text="Inventory Level" />
+            <TableColumn fx:id="partPriceCol" prefWidth="136.6666259765625" text="Price/Cost Per Unit" />
+        </columns>
+      </TableView>
+      <TableView fx:id="productTable" layoutX="691.0" layoutY="187.0" prefHeight="293.0" prefWidth="566.0">
+        <columns>
+          <TableColumn fx:id="productIdCol" prefWidth="106.0" text="Product ID" />
+          <TableColumn fx:id="productNameCol" prefWidth="210.0" text="Product Name" />
+            <TableColumn fx:id="productInventoryLevelCol" prefWidth="114.6666259765625" text="Inventory Level" />
+            <TableColumn fx:id="productPriceCol" prefWidth="136.6666259765625" text="Price/Cost Per Unit" />
+        </columns>
+      </TableView>
+      <Button fx:id="addPart" layoutX="472.0" layoutY="493.0" mnemonicParsing="false" onAction="#onAddPart" text="Add" />
+      <Button fx:id="modifyPart" layoutX="516.0" layoutY="493.0" mnemonicParsing="false" onAction="#onModifyPart" text="Modify" />
+      <Button fx:id="deletePart" layoutX="588.0" layoutY="493.0" mnemonicParsing="false" onAction="#onDeletePart" text="Delete" />
+      <Button fx:id="addProduct" layoutX="1092.0" layoutY="493.0" mnemonicParsing="false" onAction="#onAddProduct" text="Add" />
+      <Button fx:id="modifyProduct" layoutX="1137.0" layoutY="493.0" mnemonicParsing="false" onAction="#onModifyProduct" text="Modify" />
+      <Button fx:id="deleteProduct" layoutX="1206.0" layoutY="493.0" mnemonicParsing="false" onAction="#onDeleteProduct" text="Delete" />
+      <Label layoutX="80.0" layoutY="159.0" text="Parts">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="698.0" layoutY="159.0" text="Products">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Label>
+      <Button fx:id="exit" layoutX="1209.0" layoutY="572.0" mnemonicParsing="false" onAction="#onExit" text="Exit">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+   </children>
 </AnchorPane>
