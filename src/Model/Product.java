@@ -11,6 +11,7 @@ public class Product {
     private int stock;
     private int min;
     private int max;
+    public static int currentId = 3;
 
     public Product(int id, String name, double price, int stock, int min, int max) {
         this.id = id;

@@ -8,6 +8,7 @@ public abstract class Part {
     private int stock;
     private int min;
     private int max;
+    public static int currentId = 6;
 
     public Part(int id, String name, double price, int stock, int min, int max) {
         this.id = id;

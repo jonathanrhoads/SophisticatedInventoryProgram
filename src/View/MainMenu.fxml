@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -51,5 +52,7 @@
             <Font size="15.0" />
          </font>
       </Button>
+      <TextField fx:id="partTextField" layoutX="491.0" layoutY="146.0" onAction="#onActionSearchParts" />
+      <TextField fx:id="productTextField" layoutX="1111.0" layoutY="146.0" onAction="#onActionSearchProducts" />
    </children>
 </AnchorPane>
