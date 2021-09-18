@@ -114,11 +114,11 @@ public class AddPartForm implements Initializable {
 
             if(min <= stock && stock <= max){
                 if(inHouseRB.isSelected()) {
-                    InHouse part = new InHouse(currentId++, name, price, stock, max, min, machineId);
+                    InHouse part = new InHouse(currentId++, name, price, stock, min, max, machineId);
                     Inventory.addPart(part);
                 }
                 else if (outsourcedRB.isSelected()){
-                    Outsourced part = new Outsourced(currentId++, name, price, stock, max, min, companyName);
+                    Outsourced part = new Outsourced(currentId++, name, price, stock, min, max, companyName);
                     Inventory.addPart(part);
                 }
 

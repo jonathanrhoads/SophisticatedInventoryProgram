@@ -136,12 +136,12 @@ public class ModifyPartForm implements Initializable {
             if(min <= stock && stock <= max){
                 if(inHouseRB.isSelected()) {
                     int machineId = Integer.parseInt(partTypeTextField.getText());
-                    Part newPart = new InHouse(part.getId(), name, price, stock, max, min, machineId);
+                    Part newPart = new InHouse(part.getId(), name, price, stock, min, max, machineId);
                     Inventory.updatePart(idx, newPart);
                 }
                 else if (outsourcedRB.isSelected()){
                     String companyName = partTypeTextField.getText();
-                    Part newPart = new Outsourced(part.getId(), name, price, stock, max, min, companyName);
+                    Part newPart = new Outsourced(part.getId(), name, price, stock, min, max, companyName);
                     Inventory.updatePart(idx, newPart);
                 }
 
