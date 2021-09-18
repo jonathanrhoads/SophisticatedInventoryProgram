@@ -20,7 +20,7 @@
       <Label layoutX="35.0" layoutY="242.0" text="Inventory" />
       <Label layoutX="33.0" layoutY="291.0" text="Price/Cost" />
       <Label layoutX="65.0" layoutY="337.0" text="Max" />
-      <TextField editable="false" layoutX="114.0" layoutY="148.0" promptText="Auto Gen - Disabled" />
+      <TextField fx:id="idTextField" disable="true" editable="false" layoutX="114.0" layoutY="148.0" promptText="Auto Gen - Disabled" />
       <TextField fx:id="MinTextField" layoutX="114.0" layoutY="376.0" />
       <TextField fx:id="nameTextField" layoutX="114.0" layoutY="192.0" />
       <TextField fx:id="inventoryTextField" layoutX="114.0" layoutY="238.0" />

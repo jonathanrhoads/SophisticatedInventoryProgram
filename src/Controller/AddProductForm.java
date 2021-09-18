@@ -17,32 +17,91 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * The type Add product form.
+ */
 public class AddProductForm implements Initializable {
+    /**
+     * The Min text field.
+     */
     public TextField MinTextField;
+    /**
+     * The Name text field.
+     */
     public TextField nameTextField;
+    /**
+     * The Inventory text field.
+     */
     public TextField inventoryTextField;
+    /**
+     * The Price text field.
+     */
     public TextField priceTextField;
+    /**
+     * The Max text field.
+     */
     public TextField MaxTextField;
+    /**
+     * The Save product button.
+     */
     public Button saveProductButton;
+    /**
+     * The Cancel button.
+     */
     public Button cancelButton;
+    /**
+     * The Part table.
+     */
     public TableView<Part> partTable;
+    /**
+     * The Part id col.
+     */
     public TableColumn partIdCol;
+    /**
+     * The Part name col.
+     */
     public TableColumn partNameCol;
+    /**
+     * The Part inventory level col.
+     */
     public TableColumn partInventoryLevelCol;
+    /**
+     * The Part price col.
+     */
     public TableColumn partPriceCol;
+    /**
+     * The Add part.
+     */
     public Button addPart;
+    /**
+     * The Modify part.
+     */
     public Button modifyPart;
+    /**
+     * The Part text field.
+     */
     public TextField partTextField;
+    /**
+     * The Associated part table.
+     */
     public TableView<Part> associatedPartTable;
-    public TableColumn partIdCol1;
-    public TableColumn partNameCol1;
-    public TableColumn partInventoryLevelCol1;
-    public TableColumn partPriceCol1;
-    public TableColumn associatedPartIdCol;
-    public TableColumn associatedPartNameCol;
-    public TableColumn associatedPartStockCol;
-    public TableColumn associatedPartPriceCol;
-    public ObservableList<Part> partsToAssociate;
+    /**
+     * The Associated part id col.
+     */
+    public TableColumn<Part, Integer> associatedPartIdCol;
+    /**
+     * The Associated part name col.
+     */
+    public TableColumn<Part, String> associatedPartNameCol;
+    /**
+     * The Associated part stock col.
+     */
+    public TableColumn<Part, Integer> associatedPartStockCol;
+    /**
+     * The Associated part price col.
+     */
+    public TableColumn<Part, Double> associatedPartPriceCol;
+    private final ObservableList<Part> partsToAssociate = FXCollections.observableArrayList();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,14 +111,17 @@ public class AddProductForm implements Initializable {
         partInventoryLevelCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-
         associatedPartIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         associatedPartNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         associatedPartStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         associatedPartPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
-
     }
 
+    /**
+     * On save product.
+     *
+     * @param actionEvent the action event
+     */
     public void onSaveProduct(ActionEvent actionEvent) {
         try {
             String name = nameTextField.getText();
@@ -69,9 +131,10 @@ public class AddProductForm implements Initializable {
             int min = Integer.parseInt(MinTextField.getText());
 
             if(min <= stock && stock <= max){
-
                 Product product = new Product(Product.currentId++, name, price, stock, min, max);
                 Inventory.addProduct(product);
+
+                product.getAllAssociatedParts().addAll(partsToAssociate);
 
                 Parent root = FXMLLoader.load(getClass().getResource("/View/MainMenu.fxml"));
                 Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -80,6 +143,13 @@ public class AddProductForm implements Initializable {
                 stage.setScene(scene);
                 stage.show();
             }
+            else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("Incorrect input");
+                alert.setContentText("Minimum inventory must be less than or equal to maximum inventory. Inventory level must be in between min and max.");
+                alert.showAndWait();
+            }
         }
         catch (Exception e) {
             warning();
@@ -87,6 +157,12 @@ public class AddProductForm implements Initializable {
 
     }
 
+    /**
+     * On cancel.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void onCancel(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/View/MainMenu.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -96,6 +172,11 @@ public class AddProductForm implements Initializable {
         stage.show();
     }
 
+    /**
+     * On associate part.
+     *
+     * @param actionEvent the action event
+     */
     public void onAssociatePart(ActionEvent actionEvent) {
         Part part = partTable.getSelectionModel().getSelectedItem();
 
@@ -112,6 +193,11 @@ public class AddProductForm implements Initializable {
         }
     }
 
+    /**
+     * On remove associated part.
+     *
+     * @param actionEvent the action event
+     */
     public void onRemoveAssociatedPart(ActionEvent actionEvent) {
         Part part = associatedPartTable.getSelectionModel().getSelectedItem();
 
@@ -124,9 +210,20 @@ public class AddProductForm implements Initializable {
         }
         else {
             partsToAssociate.remove(part);
+            associatedPartTable.setItems(partsToAssociate);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Removal");
+            alert.setContentText("The selected associated part has been removed.");
+            alert.showAndWait();
         }
     }
 
+    /**
+     * On action search parts.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionSearchParts(ActionEvent actionEvent) {
         String query = partTextField.getText();
         ObservableList<Part> parts = searchParts((query));
@@ -147,11 +244,13 @@ public class AddProductForm implements Initializable {
         partTable.setItems(parts);
         partTextField.setText("");
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setHeaderText("No matches found");
-        alert.setContentText("There were no parts matching your input.");
-        alert.showAndWait();
+        if(parts.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No matches found");
+            alert.setContentText("There were no parts matching your input.");
+            alert.showAndWait();
+        }
     }
 
     private Part searchByPartId (int id) {

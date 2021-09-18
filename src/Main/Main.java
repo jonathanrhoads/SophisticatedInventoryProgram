@@ -8,7 +8,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * The main class extends the application class. It is used to hold the main method and start the initial screen.
+ * <p>
+ * FUTURE ENHANCEMENT: When a part gets associated with a product, the amount of that part used for the product should be
+ * depleted from the total inventory of that product. Then a warning should be passed when that part is depleted to its
+ * minimum level.
+ */
 public class Main extends Application {
+
+    /**
+     * The start method creates the first window and calls the add test data method.
+     * @param primaryStage
+     * */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -20,6 +32,9 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    /**
+     *
+     */
     private static void addTestData(){
         Part[] parts = new Part[] {
                 new InHouse(1, "Lens", 5.00, 20, 5, 100, 1),
@@ -39,13 +54,16 @@ public class Main extends Application {
                 new Product(2, "Bling Bling Walking Cane", 505.00, 4, 2, 50)
         };
 
-        products[0].addAssociatedPart(parts[0]);
-
         for(Product product: products) {
             Inventory.addProduct(product);
         }
     }
 
+    /**
+     * Main.
+     *
+     * @param args the args
+     */
     public static void Main(String[] args) {
         launch(args);
     }

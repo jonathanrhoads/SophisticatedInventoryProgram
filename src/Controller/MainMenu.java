@@ -17,28 +17,94 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * The type Main menu.
+ */
 public class MainMenu implements Initializable {
 
+    /**
+     * The Part id col.
+     */
     public TableColumn<Object, Object> partIdCol;
+    /**
+     * The Part name col.
+     */
     public TableColumn<Object, Object> partNameCol;
+    /**
+     * The Part inventory level col.
+     */
     public TableColumn<Object, Object> partInventoryLevelCol;
+    /**
+     * The Part price col.
+     */
     public TableColumn<Object, Object> partPriceCol;
+    /**
+     * The Product id col.
+     */
     public TableColumn<Object, Object> productIdCol;
+    /**
+     * The Product name col.
+     */
     public TableColumn<Object, Object> productNameCol;
+    /**
+     * The Product inventory level col.
+     */
     public TableColumn<Object, Object> productInventoryLevelCol;
+    /**
+     * The Product price col.
+     */
     public TableColumn<Object, Object> productPriceCol;
+    /**
+     * The Add part.
+     */
     public Button addPart;
+    /**
+     * The Modify part.
+     */
     public Button modifyPart;
+    /**
+     * The Delete part.
+     */
     public Button deletePart;
+    /**
+     * The Add product.
+     */
     public Button addProduct;
+    /**
+     * The Modify product.
+     */
     public Button modifyProduct;
+    /**
+     * The Delete product.
+     */
     public Button deleteProduct;
+    /**
+     * The Exit.
+     */
     public Button exit;
+    /**
+     * The Part table.
+     */
     public TableView<Part> partTable;
+    /**
+     * The Product table.
+     */
     public TableView<Product> productTable;
+    /**
+     * The Part text field.
+     */
     public TextField partTextField;
+    /**
+     * The Product text field.
+     */
     public TextField productTextField;
+    /**
+     * The constant partToModify.
+     */
     public static Part partToModify;
+    /**
+     * The constant productToModify.
+     */
     public static Product productToModify;
 
     @Override
@@ -59,6 +125,12 @@ public class MainMenu implements Initializable {
 
     }
 
+    /**
+     * On add part.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void onAddPart(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/View/AddPartForm.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -68,6 +140,12 @@ public class MainMenu implements Initializable {
         stage.show();
     }
 
+    /**
+     * On modify part.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void onModifyPart(ActionEvent actionEvent) throws IOException {
         if(partTable.getSelectionModel().getSelectedItem() == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -88,6 +166,11 @@ public class MainMenu implements Initializable {
         }
     }
 
+    /**
+     * On delete part.
+     *
+     * @param actionEvent the action event
+     */
     public void onDeletePart(ActionEvent actionEvent) {
         Part part = partTable.getSelectionModel().getSelectedItem();
 
@@ -100,9 +183,20 @@ public class MainMenu implements Initializable {
         }
         else {
             Inventory.deletePart(part);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Deletion");
+            alert.setContentText("The selected part has been deleted.");
+            alert.showAndWait();
         }
     }
 
+    /**
+     * On add product.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void onAddProduct(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/View/AddProductForm.fxml"));
         Stage stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
@@ -112,6 +206,12 @@ public class MainMenu implements Initializable {
         stage.show();
     }
 
+    /**
+     * On modify product.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void onModifyProduct(ActionEvent actionEvent) throws IOException {
         if(productTable.getSelectionModel().getSelectedItem() == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -133,6 +233,11 @@ public class MainMenu implements Initializable {
 
     }
 
+    /**
+     * On delete product.
+     *
+     * @param actionEvent the action event
+     */
     public void onDeleteProduct(ActionEvent actionEvent) {
         Product product = productTable.getSelectionModel().getSelectedItem();
 
@@ -143,15 +248,37 @@ public class MainMenu implements Initializable {
             alert.setContentText("No product was selected to be deleted.");
             alert.showAndWait();
         }
+        else if (product.getAllAssociatedParts().size() > 0) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Associated parts found");
+            alert.setContentText("Cannot delete product with associated parts.");
+            alert.showAndWait();
+        }
         else {
             Inventory.deleteProduct(product);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation");
+            alert.setHeaderText("Deletion");
+            alert.setContentText("The selected product has been deleted.");
+            alert.showAndWait();
         }
     }
 
+    /**
+     * On exit.
+     *
+     * @param actionEvent the action event
+     */
     public void onExit(ActionEvent actionEvent) {
         System.exit(0);
     }
 
+    /**
+     * On action search parts.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionSearchParts(ActionEvent actionEvent) {
         String query = partTextField.getText();
         ObservableList<Part> parts = searchParts((query));
@@ -168,15 +295,16 @@ public class MainMenu implements Initializable {
                 // ignore exception
             }
         }
-
         partTable.setItems(parts);
         partTextField.setText("");
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setHeaderText("No matches found");
-        alert.setContentText("There were no parts matching your input.");
-        alert.showAndWait();
+        if(parts.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No matches found");
+            alert.setContentText("There were no parts matching your input.");
+            alert.showAndWait();
+        }
     }
 
     private Part searchByPartId (int id) {
@@ -202,6 +330,11 @@ public class MainMenu implements Initializable {
         return matches;
     }
 
+    /**
+     * On action search products.
+     *
+     * @param actionEvent the action event
+     */
     public void onActionSearchProducts(ActionEvent actionEvent) {
         String query = productTextField.getText();
         ObservableList<Product> products = searchProducts((query));
@@ -218,15 +351,16 @@ public class MainMenu implements Initializable {
                 // ignore exception
             }
         }
-
         productTable.setItems(products);
         productTextField.setText("");
 
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Warning");
-        alert.setHeaderText("No matches found");
-        alert.setContentText("There were no products matching your input.");
-        alert.showAndWait();
+        if(products.isEmpty()){
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("No matches found");
+            alert.setContentText("There were no products matching your input.");
+            alert.showAndWait();
+        }
     }
 
     private Product searchByProductId (int id) {
